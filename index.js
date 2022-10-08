@@ -30,11 +30,18 @@ console.log('example task:', processFirstItem(['foo','bar'],function(str){return
   Study the code for counter1 and counter2, then answer the questions below.
   
   1. What is the difference between counter1 and counter2?
+      counter1 has the 'count variable inside the scope of counterMaker
+      counter2 has the 'count' variable at the global level and
   
   2. Which of the two uses a closure? How can you tell?
+      counter1, because 'counterMaker()' has the function defined within it, and has references
+      to the surrounding lexical envirnment
   
   3. In what scenario would the counter1 code be preferable? In what scenario would 
      counter2 be better?  
+     counter1 could be useful to keep the count variable off of the global scope, but still
+     contained somewhere in memory
+     counter2 could be useful if the count variable needs to be accessed by other functions
 */
 
 // counter1 code
@@ -64,8 +71,8 @@ Use the inning function below to do the following:
 NOTE: This will be a callback function for the tasks below
 */
 
-function inning(/*Code Here*/){
-    /*Code Here*/
+function inning(){
+  return Math.floor(Math.random() * 3)
 }
 
 
@@ -83,8 +90,13 @@ Use the finalScore function below to do the following:
 }
 */ 
 
-function finalScore(/*Code Here*/){
-  /*Code Here*/
+function finalScore(inning,numberOfInnings){
+  const scores = {Home:0,Away:0}
+  for(let i = 0;i < numberOfInnings;i++){
+    scores.Home = inning()
+    scores.Away = inning()
+  }
+  return scores
 }
 
 
@@ -101,9 +113,11 @@ For example: invoking getInningScore(inning) might return this object:
   */
 
 
-function getInningScore(/*Your Code Here */) {
-  /*Your Code Here */
-
+function getInningScore(inning) {
+  const scores = {Home:0,Away:0}
+  scores.Home = inning()
+  scores.Away = inning()
+  return scores
 }
 
 
@@ -147,10 +161,26 @@ Use the scoreboard function below to do the following:
   "This game will require extra innings: Away 10 - Home 10"
 ] */
 // NOTE: There is no test associated with this code; if your output matches the given example, consider it complete!
-function scoreboard(/* CODE HERE */) {
-  /* CODE HERE */
+function scoreboard(inningScore,inning,inningsToPlay) {
+  const inningToInningScore = []
+  const strScoreArr = []
+  let homeScoreCounter = 0
+  let awayScoreCounter = 0
+  const finalScore = {Home:0,Away:0}
+  for(let i = 0; i < inningsToPlay; i++){
+    inningToInningScore.push({Home:inningScore(inning).Home,Away:inningScore(inning).Away})
+    homeScoreCounter += inningToInningScore[i].Home
+    awayScoreCounter += inningToInningScore[i].Away
+    strScoreArr.push(`Inning ${i+1}: Away ${inningToInningScore[i].Away} - Home ${inningToInningScore[i].Home}`)
+  }
+  if(homeScoreCounter != awayScoreCounter){
+    strScoreArr.push(`Final Score: Away ${awayScoreCounter} - Home ${homeScoreCounter}`)
+  } else {
+    strScoreArr.push(`This game will require extra innings: Away ${awayScoreCounter} - Home ${homeScoreCounter}`)
+  }
+  return strScoreArr
 }
-
+console.log(scoreboard(getInningScore,inning,9))
 
 
 
